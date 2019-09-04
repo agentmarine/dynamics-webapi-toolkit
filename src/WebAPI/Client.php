@@ -376,8 +376,13 @@ class Client implements IOrganizationService {
                 if ( array_key_exists( $attributeName, $entityMap->fieldTypes ) ) {
                     $attributeType = $entityMap->fieldTypes[ $attributeName ];
                 }
-
+                $comparitor = ' eq ';
                 switch ( true ) {
+
+                    case ( $this->validateDate($value)):
+                        $queryValue = $value->format('Y-m-d');
+                        $comparitor = ' eq ';
+                        break;
                     /*
                      * GUIDs may be stored as strings,
                      * but GUIDs in UniqueIdentifier attributes must not be enclosed in quotes.
@@ -395,7 +400,7 @@ class Client implements IOrganizationService {
                         $queryValue = $value;
                 }
 
-                $filterQuery[] = $queryAttributeName . ' eq ' . $queryValue;
+                $filterQuery[] = $queryAttributeName . $comparitor . $queryValue;
             }
             if ( count( $filterQuery ) ) {
                 $queryData['Filter'] = implode( ' and ', $filterQuery );
@@ -534,4 +539,9 @@ class Client implements IOrganizationService {
         return $this->client->getCachePool();
     }
 
+    private function validateDate($date, $format = 'Y-m-d H:i:s')
+    {
+        $d = \DateTime::createFromFormat($format, $date);
+        return $d && $d->format($format) == $date;
+    }
 }
