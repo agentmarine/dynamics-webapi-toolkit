@@ -362,6 +362,8 @@ class Client {
     public function getRecord( $entityCollection, $entityId, $queryOptions = null ) {
         $url = $this->buildQueryURL( sprintf( "%s(%s)", $entityCollection, $entityId ), $queryOptions );
         $res = $this->doRequest( 'GET', $url, null, $this->buildQueryHeaders( $queryOptions ) );
+        $this->getLogger()->debug( $res->getBody() );
+
         $result = json_decode( $res->getBody() );
 
         return $result;
