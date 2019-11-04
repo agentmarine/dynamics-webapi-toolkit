@@ -115,8 +115,7 @@ class Token {
         if ( $time === null ) {
             $time = time();
         }
-
-        return ( $time >= $this->not_before && $time < $this->expires_on );
+        return ( $time >= $this->not_before && $time < ( $this->expires_on - 300 ) );
     }
 
 }
